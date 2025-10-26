@@ -3,26 +3,48 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-void det_matrix(int matrix[][], int n){
-    int det = 0; 
-    if(n==0){
-        cout<< "0";
-    }else if(n==1){
-        cout << matrix[0][0];
-    }else if(n==2){
-        det = matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0];
-        cout << det;
+int determinant_matrix(vector<vector<int>>& matrix, int row, int col) {
+    if( row != col ){
+        cout << "indefinite determinant" << endl;
+        return 0;
     }
+    if(row == 1){
+        return matrix[0][0];
+    }
+    if(row == 2){
+        return (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]);
+    }
+    int det = 0;
+    for(int p = 0; p < col; p++){
+        vector<vector <int>> submatrix (row -1, vector <int> (col -1));
+        for(int i = 1; i < row; i++){
+            for(int j=1 ; j < col; j++){
+                if(j < p){
+                    submatrix[i -1][j -1] = matrix[i][j];
+                }
+                else if(j > p){
+                    submatrix[i -1][j -2] = matrix[i][j];
+                }
+            }
+        }
+        det = det + matrix[0][p] * pow(-1, 1 + p) * determinant_matrix(submatrix, row -1, col -1);
+    }
+    return det;
 }
-int main(){
-    int n;
-    cin >> n;
-    int matrix[n][n];
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
+
+int main (){
+    int row, col; 
+    cout << "Enter number of rows: "; 
+    cin >> row;
+    cout << "Enter number of columns: ";
+    cin >> col;
+    vector<vector <int>> matrix ( row , vector<int> (col)); //Input matrix include row and each row include col elements
+    for(int i = 0; i < row; i++){
+        for(int j = 0; j < col; j++){
             cin >> matrix[i][j];
         }
     }
-    
+    determinant_matrix(matrix, row, col);
+    cout << "Determinant of the matrix is: " << determinant_matrix(matrix, row, col) << endl;
     return 0;
 }
