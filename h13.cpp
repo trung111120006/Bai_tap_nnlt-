@@ -18,16 +18,16 @@ int determinant_matrix(vector<vector<int>>& matrix, int row, int col) {
     for(int p = 0; p < col; p++){
         vector<vector <int>> submatrix (row -1, vector <int> (col -1));
         for(int i = 1; i < row; i++){
-            for(int j=1 ; j < col; j++){
-                if(j < p){
-                    submatrix[i -1][j -1] = matrix[i][j];
+            int sub_col = 0;
+            for(int j=0 ; j < col; j++){
+                if(j == p){
+                    continue;
                 }
-                else if(j > p){
-                    submatrix[i -1][j -2] = matrix[i][j];
-                }
+                submatrix[i -1][sub_col] = matrix[i][j];
+                sub_col++;
             }
         }
-        det = det + matrix[0][p] * pow(-1, 1 + p) * determinant_matrix(submatrix, row -1, col -1);
+        det = det + matrix[0][p] * pow(-1, 0 + p) * determinant_matrix(submatrix, row -1, col -1);
     }
     return det;
 }
