@@ -1,3 +1,4 @@
 Hello every one    my nameis trung 12 @@@
 halo 
 heheehheeee
+chú ý biến local có 2 cái automatic và static 
