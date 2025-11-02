@@ -23,36 +23,48 @@ double determinant_matrix(vector<vector<double>>& matrix, int n) {
     }
     return det;
 }
-
-vector<vector<double>> inverse_matrix(vector<vector<double>>& matrix, int n) {
+double cofactor_matrix(vector<vector<double>>& matrix, int n){
+    vector<vector<double>> cofactor_matrix(n, vector<double>(n));
+    vector<vector<double>> submatrix(n - 1, vector<double>(n - 1));
+    for (int row = 0; row < n; row++){
+        int subrow = 0;
+        for (int col = 0; col < n; col++){
+            int subcol = 0;
+            for (int i = 0; i < n; i++){
+                if (i == row) continue;
+                for (int j = 0; j < n; j++){
+                    if (j == col) continue;
+                    submatrix[subrow][subcol] = matrix[i][j];
+                    subcol++;
+                }
+                subrow++;
+            }
+        }
+        cofactor_matrix[row][col] = pow(-1, row + col) * determinant_matrix(submatrix, n - 1);
+    }
+    return cofactor_matrix;
+}
+double inverse_matrix(vector<vector<double>>& matrix, int n){
     double det = determinant_matrix(matrix, n);
-    if (det == 0) {
-        cout << "Matrix is singular and cannot be inverted." << endl;
+    if (det == 0){
+        cout << "Matrix is singular, cannot find its inverse." << endl;
         return {};
     }
-
-    vector<vector<double>> adj(n, vector<double>(n));
-    vector<vector<double>> submatrix(n - 1, vector<double>(n - 1));
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            int subi = 0;
-            for (int x = 0; x < n; x++) {
-                if (x == i) continue;
-                int subj = 0;
-                for (int y = 0; y < n; y++) {
-                    if (y == j) continue;
-                    submatrix[subi][subj] = matrix[x][y];
-                    subj++;
-                }
-                subi++;
-            }
-            adj[j][i] = pow(-1, i + j) * determinant_matrix(submatrix, n - 1) / det; // chuyển vị
+    vector<vector<double>> cofactor = cofactor_matrix(matrix, n);
+    vector<vector<double>> adjugate(n, vector<double>(n));
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            adjugate[j][i] = cofactor[i][j];
         }
     }
+    vector<vector<double>> inverse(n, vector<double>(n));
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            inverse[i][j] = adjugate[i][j] / det;
+        }
+    }
+    return inverse;
 
-    return adj;
-}
 
 int main() {
     int n;
@@ -67,13 +79,14 @@ int main() {
 
     double det = determinant_matrix(matrix, n);
     cout << "Determinant = " << det << endl;
-
-    vector<vector<double>> inv = inverse_matrix(matrix, n);
-    if (!inv.empty()) {
+    if (det == 0){
+        cout << "Matrix is singular, cannot find its inverse." << endl;
+    } else {
+        vector<vector<double>> inv = inverse_matrix(matrix, n);
         cout << "Inverse matrix:\n";
-        for (auto& row : inv) {
-            for (double val : row)
-                cout << fixed << setprecision(3) << val << " ";
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < n; col++)
+                cout << inv[row][col] << " ";
             cout << endl;
         }
     }
