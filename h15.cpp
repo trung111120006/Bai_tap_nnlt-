@@ -1,29 +1,48 @@
 #include <bits/stdc++.h>
-
 using namespace std;
-struct day
-{
-    int date;
+
+struct Date {
+    int day;
     int month;
     int year;
 };
-struct tomorrow
-{
-    day today;
-    int days_after;
-};
-int main (){
-    tomorrow t;
-    cout << "Enter day, month, year: ";
-    cin >> t.today.date >> t.today.month >> t.today.year;
-    cout << "Enter number of days to add: ";
-    cin >> t.days_after;
 
-    // Simple addition without considering month/year overflow
-    t.today.date += t.days_after;
+bool isLeap(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
 
-    cout << "New date after adding " << t.days_after << " days is: "
-         << t.today.date << "/" << t.today.month << "/" << t.today.year << endl;
+Date getTomorrow(Date today) {
+    Date next = today;
+    int daysInMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    // Tháng 2 năm nhuận có 29 ngày
+    if (isLeap(today.year)) {
+        daysInMonth[2] = 29;
+    }
+
+    next.day++;
+
+    if (next.day > daysInMonth[next.month]) {
+        next.day = 1;
+        next.month++;
+        if (next.month > 12) {
+            next.month = 1;
+            next.year++;
+        }
+    }
+
+    return next;
+}
+
+int main() {
+    Date today;
+    cout << "Enter today date (dd mm yyyy): ";
+    cin >> today.day >> today.month >> today.year;
+
+    Date tmr = getTomorrow(today);
+
+    cout << "Tomorrow date is: ";
+    cout << tmr.day << " " << tmr.month << " " << tmr.year << endl;
 
     return 0;
 }
