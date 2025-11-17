@@ -80,8 +80,7 @@ int main() {
     times.push_back(time_purchased_packaged(orders));
     times.push_back(time_packaged_delivered(orders));
     times.push_back(time_delivered_received(orders));
-
-    long long mx = *max_element(times.begin(), times.end());
-
-    cout << "The longest time interval is: " << mx << " seconds.\n";
+    
+    cout << "The longest time among all stages is:" << *max_element(times.begin(), times.end()) << "seconds and it is in the stage "<< find(times.begin(), times.end(), *max_element(times.begin(), times.end())) - times.begin() << "\n";
+    return 0;
 }
