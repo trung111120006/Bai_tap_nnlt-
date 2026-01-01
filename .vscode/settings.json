@@ -56,5 +56,6 @@
     "C_Cpp.errorSquiggles": "disabled",
     "cSpell.words": [
         "languyge"
-    ]
+    ],
+    "editor.inlineSuggest.edits.showCollapsed": true
 }
